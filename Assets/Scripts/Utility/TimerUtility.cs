@@ -28,6 +28,9 @@ public class Timer
 
 	public void Update()
 	{
+		if (progress <= 0)
+			return;
+
 		progress -= Time.deltaTime;
 
 		if (progress <= 0)
