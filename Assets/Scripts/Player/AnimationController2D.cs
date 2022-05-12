@@ -32,7 +32,13 @@ public class AnimationController2D : MonoBehaviour
 		if (move.xRaw > 0)
 			FlipRight();
 
-		else if (move.x < 0)
+		else if (move.xRaw < 0)
+			FlipLeft();
+
+		else if (rb.velocity.x > 1f)
+			FlipRight();
+
+		else if (rb.velocity.x < -1f)
 			FlipLeft();
 	}
 
