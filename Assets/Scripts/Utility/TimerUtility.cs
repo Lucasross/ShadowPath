@@ -10,6 +10,12 @@ public static class TimerUtility
 		Timer t = new Timer() { duration = duration };
 		return t;
 	}
+
+	public static Timer OnEnd(this Timer timer, Action callback)
+	{
+		timer.OnTimerEnd += callback;
+		return timer;
+	}
 }
 
 public class Timer
@@ -19,11 +25,19 @@ public class Timer
 	public bool done => progress <= 0;
 
 	public float duration;
-	public float progress;
+	public float progress = 0;
 
 	public void Start()
 	{
 		progress = duration;
+	}
+
+	public void Stop(bool triggerEndEvent)
+	{
+		progress = 0;
+
+		if (triggerEndEvent)
+			OnTimerEnd?.Invoke();
 	}
 
 	public void Update()
