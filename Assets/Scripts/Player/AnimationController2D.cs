@@ -28,6 +28,7 @@ public class AnimationController2D : MonoBehaviour
 		anim.SetBool("isRunning", move.isRunning);
 		anim.SetFloat("Horizontal", rb.velocity.x);
 		anim.SetFloat("Vertical", rb.velocity.y);
+		anim.SetBool("dashing", !move.dashDuration.done);
 
 		if (move.xRaw > 0)
 			FlipRight();

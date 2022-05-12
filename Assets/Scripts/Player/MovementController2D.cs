@@ -17,27 +17,27 @@ public class MovementController2D : MonoBehaviour
 	public float dashSpeed = 20;
 
 	public float x, y, xRaw, yRaw;
-	public bool jump, wallJump, wallSlide, xButton;
+	public bool jump, wallJump, wallSlide, xButton, special;
 
 	public Timer jumpInputTimer;
 	public Timer wallJumpIncapacityTimer;
+	public Timer dashCooldown;
+	public Timer dashDuration;
 
 	public bool isRunning => xButton;
 
-	private void Awake()
-	{
-		CharacterCollision2D.OnTouchGround += OnTouchGround;
-	}
+	private Vector2 beforeDashVelocity;
 
 	void Start()
 	{
 		rb = GetComponent<Rigidbody2D>();
 		coll = GetComponent<CharacterCollision2D>();
 		
-		jumpInputTimer = TimerUtility.Create(0.2f);
-		jumpInputTimer.OnTimerEnd += () => jump = false;
-
+		jumpInputTimer = TimerUtility.Create(0.2f).OnEnd(() => jump = false);
 		wallJumpIncapacityTimer = TimerUtility.Create(0.5f);
+
+		dashCooldown = TimerUtility.Create(1f);
+		dashDuration = TimerUtility.Create(0.3f).OnEnd(() => rb.velocity = beforeDashVelocity);
 	}
 
 	private void Update()
@@ -60,12 +60,22 @@ public class MovementController2D : MonoBehaviour
 				wallJumpIncapacityTimer.Start();
 		}
 
+		if(Input.GetButtonDown("Special") && dashCooldown.done && xButton)
+		{
+			special = true;
+		}
+
 		jumpInputTimer.Update();
 		wallJumpIncapacityTimer.Update();
+		dashCooldown.Update();
+		dashDuration.Update();
 	}
 
 	void FixedUpdate()
 	{
+		if (!dashDuration.done)
+			return;
+		
 		Run();
 
 		if (jump && coll.onGround)
@@ -76,6 +86,9 @@ public class MovementController2D : MonoBehaviour
 
 		if (jump && coll.onWall)
 			WallJump();
+
+		if (special && dashCooldown.done)
+			Dash();
 	}
 
 	private void Run()
@@ -108,9 +121,15 @@ public class MovementController2D : MonoBehaviour
 		jump = false;
 	}
 
-	// EVENTS
-
-	private void OnTouchGround()
+	private void Dash()
 	{
+		beforeDashVelocity = new Vector2(rb.velocity.x, 0);
+
+		rb.velocity = new Vector2(dashSpeed * xRaw, 0);
+
+		dashCooldown.Start();
+		dashDuration.Start();
+
+		special = false;
 	}
 }
