@@ -17,12 +17,12 @@ public class MovementController2D : MonoBehaviour
 	public float dashSpeed = 20;
 
 	public float x, y, xRaw, yRaw;
-	public bool jump, wallJump, wallSlide;
+	public bool jump, wallJump, wallSlide, xButton;
 
 	public Timer jumpInputTimer;
 	public Timer wallJumpIncapacityTimer;
 
-	public bool isRunning => xRaw >= 0.1f || xRaw <= -0.1f;
+	public bool isRunning => xButton;
 
 	private void Awake()
 	{
@@ -46,6 +46,7 @@ public class MovementController2D : MonoBehaviour
 		y = Input.GetAxis("Vertical");
 		xRaw = Input.GetAxisRaw("Horizontal");
 		yRaw = Input.GetAxisRaw("Vertical");
+		xButton = Input.GetButton("Horizontal");
 
 		wallSlide = !coll.onGround && (coll.onLeftWall && xRaw < 0) || (coll.onRightWall && xRaw > 0);
 
