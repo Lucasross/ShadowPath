@@ -19,9 +19,8 @@ public class MovementController2D : MonoBehaviour
 	public float x, y, xRaw, yRaw;
 	public bool jump, wallJump, wallSlide;
 
-	public float wallJumpIncapacityTime = 0.5f;
-	public float wallJumpIncapacityProgress;
-	private bool wallJumpIncapacity => wallJumpIncapacityProgress > 0;
+	public Timer jumpInputTimer;
+	public Timer wallJumpIncapacityTimer;
 
 	public bool isRunning => xRaw >= 0.1f || xRaw <= -0.1f;
 
@@ -34,6 +33,11 @@ public class MovementController2D : MonoBehaviour
 	{
 		rb = GetComponent<Rigidbody2D>();
 		coll = GetComponent<CharacterCollision2D>();
+		
+		jumpInputTimer = TimerUtility.Create(0.2f);
+		jumpInputTimer.OnTimerEnd += () => jump = false;
+
+		wallJumpIncapacityTimer = TimerUtility.Create(0.5f);
 	}
 
 	private void Update()
@@ -49,12 +53,14 @@ public class MovementController2D : MonoBehaviour
 		{
 			jump = true;
 
+			jumpInputTimer.Start();
+
 			if (coll.onWall)
-				wallJumpIncapacityProgress = wallJumpIncapacityTime;
+				wallJumpIncapacityTimer.Start();
 		}
 
-		if (wallJumpIncapacityProgress > 0)
-			wallJumpIncapacityProgress -= Time.deltaTime;
+		jumpInputTimer.Update();
+		wallJumpIncapacityTimer.Update();
 	}
 
 	void FixedUpdate()
@@ -73,7 +79,7 @@ public class MovementController2D : MonoBehaviour
 
 	private void Run()
 	{
-		if (!wallJumpIncapacity)
+		if (wallJumpIncapacityTimer.done)
 			rb.velocity = new Vector2(x * speed, rb.velocity.y);
 
 		else
@@ -88,7 +94,7 @@ public class MovementController2D : MonoBehaviour
 
 	private void WallSlide()
 	{
-		if (!wallJumpIncapacity)
+		if (wallJumpIncapacityTimer.done)
 			rb.velocity = new Vector2(0, -wallSlideSpeed);
 	}
 
