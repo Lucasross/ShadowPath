@@ -20,6 +20,10 @@ public class MovementController2D : MonoBehaviour
 	public bool enabledWallJump = true;
 	public bool enabledWallSlide = true;
 	public bool enabledDash = true;
+	public int airJumpQty = 1;
+	public int postDashJumpQty = 1;
+	private int postDashJumpCurrent;
+	private int airJumpCurrent;
 
 	[HideInInspector] public float x, y, xRaw, yRaw;
 	[HideInInspector] public bool jump, wallJump, wallSlide, xButton, special;
@@ -33,6 +37,11 @@ public class MovementController2D : MonoBehaviour
 
 	private Vector2 beforeDashVelocity;
 
+	private void Awake()
+	{
+		CharacterCollision2D.OnTouchGround += OnTouchGround;
+	}
+
 	void Start()
 	{
 		rb = GetComponent<Rigidbody2D>();
@@ -42,7 +51,16 @@ public class MovementController2D : MonoBehaviour
 		wallJumpIncapacityTimer = TimerUtility.Create(0.5f);
 
 		dashCooldown = TimerUtility.Create(1f);
-		dashDuration = TimerUtility.Create(0.3f).OnEnd(() => rb.velocity = beforeDashVelocity);
+		dashDuration = TimerUtility.Create(0.3f).OnEnd(() =>
+		{
+			rb.velocity = beforeDashVelocity;
+			
+			if(!coll.onGround)
+			{
+				airJumpCurrent += postDashJumpCurrent;
+				postDashJumpCurrent--;
+			}
+		});
 	}
 
 	private void Update()
@@ -83,8 +101,14 @@ public class MovementController2D : MonoBehaviour
 
 		Run();
 
-		if (jump && coll.onGround)
-			Jump();
+		if (jump)
+		{
+			if (coll.onGround)
+				Jump();
+
+			else if (!wallSlide && airJumpCurrent > 0)
+				AirJump();
+		}
 
 		if (wallSlide && enabledWallSlide)
 			WallSlide();
@@ -111,6 +135,12 @@ public class MovementController2D : MonoBehaviour
 		jump = false;
 	}
 
+	private void AirJump()
+	{
+		airJumpCurrent--;
+		Jump();
+	}
+
 	private void WallSlide()
 	{
 		if (wallJumpIncapacityTimer.done)
@@ -131,8 +161,9 @@ public class MovementController2D : MonoBehaviour
 		beforeDashVelocity = new Vector2(rb.velocity.x, 0);
 
 		float dir = GetDir();
-		
-		if(dir == 0) { 
+
+		if (dir == 0)
+		{
 			Debug.Log("Dash cancelled due to velocity equal 0");
 			return;
 		}
@@ -155,5 +186,11 @@ public class MovementController2D : MonoBehaviour
 			else
 				return 0;
 		}
+	}
+
+	private void OnTouchGround()
+	{
+		airJumpCurrent = airJumpQty;
+		postDashJumpCurrent = postDashJumpQty;
 	}
 }
