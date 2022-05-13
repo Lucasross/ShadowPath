@@ -17,9 +17,9 @@ public class MovementController2D : MonoBehaviour
 	public float dashSpeed = 20;
 
 	[Space, Header("Ability")]
-	public bool enabledWallJump;
-	public bool enabledWallSlide;
-	public bool enabledDash;
+	public bool enabledWallJump = true;
+	public bool enabledWallSlide = true;
+	public bool enabledDash = true;
 
 	[HideInInspector] public float x, y, xRaw, yRaw;
 	[HideInInspector] public bool jump, wallJump, wallSlide, xButton, special;
@@ -130,11 +130,30 @@ public class MovementController2D : MonoBehaviour
 	{
 		beforeDashVelocity = new Vector2(rb.velocity.x, 0);
 
-		rb.velocity = new Vector2(dashSpeed * xRaw, 0);
+		float dir = GetDir();
+		
+		if(dir == 0) { 
+			Debug.Log("Dash cancelled due to velocity equal 0");
+			return;
+		}
+
+		rb.velocity = new Vector2(dashSpeed * dir, 0);
 
 		dashCooldown.Start();
 		dashDuration.Start();
 
 		special = false;
+
+		float GetDir()
+		{
+			if (xRaw != 0)
+				return xRaw;
+			else if (rb.velocity.x > 0)
+				return 1;
+			else if (rb.velocity.x < 0)
+				return -1;
+			else
+				return 0;
+		}
 	}
 }
