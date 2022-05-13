@@ -16,13 +16,18 @@ public class MovementController2D : MonoBehaviour
 	public float wallSlideSpeed = 5;
 	public float dashSpeed = 20;
 
-	public float x, y, xRaw, yRaw;
-	public bool jump, wallJump, wallSlide, xButton, special;
+	[Space, Header("Ability")]
+	public bool enabledWallJump;
+	public bool enabledWallSlide;
+	public bool enabledDash;
 
-	public Timer jumpInputTimer;
-	public Timer wallJumpIncapacityTimer;
-	public Timer dashCooldown;
-	public Timer dashDuration;
+	[HideInInspector] public float x, y, xRaw, yRaw;
+	[HideInInspector] public bool jump, wallJump, wallSlide, xButton, special;
+
+	[HideInInspector] public Timer jumpInputTimer;
+	[HideInInspector] public Timer wallJumpIncapacityTimer;
+	[HideInInspector] public Timer dashCooldown;
+	[HideInInspector] public Timer dashDuration;
 
 	public bool isRunning => xButton;
 
@@ -32,7 +37,7 @@ public class MovementController2D : MonoBehaviour
 	{
 		rb = GetComponent<Rigidbody2D>();
 		coll = GetComponent<CharacterCollision2D>();
-		
+
 		jumpInputTimer = TimerUtility.Create(0.2f).OnEnd(() => jump = false);
 		wallJumpIncapacityTimer = TimerUtility.Create(0.5f);
 
@@ -60,7 +65,7 @@ public class MovementController2D : MonoBehaviour
 				wallJumpIncapacityTimer.Start();
 		}
 
-		if(Input.GetButtonDown("Special") && dashCooldown.done && xButton)
+		if (Input.GetButtonDown("Special") && dashCooldown.done && xButton)
 		{
 			special = true;
 		}
@@ -75,19 +80,19 @@ public class MovementController2D : MonoBehaviour
 	{
 		if (!dashDuration.done)
 			return;
-		
+
 		Run();
 
 		if (jump && coll.onGround)
 			Jump();
 
-		if (wallSlide)
+		if (wallSlide && enabledWallSlide)
 			WallSlide();
 
-		if (jump && coll.onWall)
+		if (jump && coll.onWall && enabledWallJump)
 			WallJump();
 
-		if (special && dashCooldown.done)
+		if (special && dashCooldown.done && enabledDash)
 			Dash();
 	}
 

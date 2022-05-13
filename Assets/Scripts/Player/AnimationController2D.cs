@@ -24,7 +24,7 @@ public class AnimationController2D : MonoBehaviour
 	{
 		anim.SetBool("onGround", coll.onGround);
 		anim.SetBool("onWall", coll.onWall);
-		anim.SetBool("wallSlide", move.wallSlide);
+		anim.SetBool("wallSlide", move.wallSlide && move.enabledWallSlide);
 		anim.SetBool("isRunning", move.isRunning);
 		anim.SetFloat("Horizontal", rb.velocity.x);
 		anim.SetFloat("Vertical", rb.velocity.y);
