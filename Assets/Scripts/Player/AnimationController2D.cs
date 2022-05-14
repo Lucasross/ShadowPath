@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class AnimationController2D : MonoBehaviour
 {
 	private Animator anim;
 	private MovementController2D move;
+	private AttackController2D attack;
 	private Rigidbody2D rb;
 	private CharacterCollision2D coll;
 	[HideInInspector]
@@ -14,9 +16,10 @@ public class AnimationController2D : MonoBehaviour
 	void Start()
 	{
 		anim = GetComponent<Animator>();
-		coll = GetComponentInParent<CharacterCollision2D>();
-		move = GetComponentInParent<MovementController2D>();
-		rb = GetComponentInParent<Rigidbody2D>();
+		coll = GetComponent<CharacterCollision2D>();
+		move = GetComponent<MovementController2D>();
+		attack = GetComponent<AttackController2D>();
+		rb = GetComponent<Rigidbody2D>();
 		sr = GetComponent<SpriteRenderer>();
 	}
 
@@ -29,6 +32,7 @@ public class AnimationController2D : MonoBehaviour
 		anim.SetFloat("Horizontal", rb.velocity.x);
 		anim.SetFloat("Vertical", rb.velocity.y);
 		anim.SetBool("dashing", !move.dashDuration.done);
+		anim.SetBool("isAttacking", attack.isAttacking);
 
 		if (move.xRaw > 0)
 			FlipRight();
@@ -43,10 +47,8 @@ public class AnimationController2D : MonoBehaviour
 			FlipLeft();
 	}
 
-	public void SetTrigger(string trigger)
-	{
-		anim.SetTrigger(trigger);
-	}
+	public void SetTrigger(string trigger) => anim.SetTrigger(trigger);
+	public void ResetTrigger(string trigger) => anim.ResetTrigger(trigger);
 
 	public void FlipRight() => Flip(false);
 	public void FlipLeft() => Flip(true);

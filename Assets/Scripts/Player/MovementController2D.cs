@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class MovementController2D : MonoBehaviour
 {
+	public static event Action OnDash;
+
 	private CharacterCollision2D coll;
+	private AttackController2D attack;
 	private Rigidbody2D rb;
 
 	[Space]
@@ -49,6 +52,7 @@ public class MovementController2D : MonoBehaviour
 	{
 		rb = GetComponent<Rigidbody2D>();
 		coll = GetComponent<CharacterCollision2D>();
+		attack = GetComponent<AttackController2D>();
 
 		jumpInputTimer = TimerUtility.Create(0.2f).OnEnd(() => jump = false);
 		wallJumpIncapacityTimer = TimerUtility.Create(0.5f);
@@ -74,7 +78,7 @@ public class MovementController2D : MonoBehaviour
 		yRaw = Input.GetAxisRaw("Vertical");
 		xButton = Input.GetButton("Horizontal");
 
-		wallSlide = !coll.onGround && (coll.onLeftWall && xRaw < 0) || (coll.onRightWall && xRaw > 0);
+		wallSlide = !coll.onGround && (coll.onLeftWall && xRaw < 0) || (coll.onRightWall && xRaw > 0) && !attack.isAttacking;
 
 		if (Input.GetButtonDown("Jump"))
 		{
@@ -179,6 +183,8 @@ public class MovementController2D : MonoBehaviour
 		dashDuration.Start();
 
 		special = false;
+
+		OnDash?.Invoke();
 
 		float GetDir()
 		{
