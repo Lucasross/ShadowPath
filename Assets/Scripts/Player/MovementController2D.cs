@@ -25,6 +25,9 @@ public class MovementController2D : MonoBehaviour
 	private int postDashJumpCurrent;
 	private int airJumpCurrent;
 
+	[Space, Header("Resources")]
+	public GameObject airJumpPrefab;
+
 	[HideInInspector] public float x, y, xRaw, yRaw;
 	[HideInInspector] public bool jump, wallJump, wallSlide, xButton, special;
 
@@ -139,6 +142,8 @@ public class MovementController2D : MonoBehaviour
 	{
 		airJumpCurrent--;
 		Jump();
+		GameObject inst = Instantiate(airJumpPrefab, coll.position, Quaternion.identity);
+		inst.transform.DOScale(Vector3.one * 2, 0.25f).OnComplete(() => Destroy(inst));
 	}
 
 	private void WallSlide()

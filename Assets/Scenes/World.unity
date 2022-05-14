@@ -403,6 +403,13 @@ MonoBehaviour:
   wallJumpForce: 12
   wallSlideSpeed: 1
   dashSpeed: 60
+  enabledWallJump: 1
+  enabledWallSlide: 1
+  enabledDash: 1
+  airJumpQty: 1
+  postDashJumpQty: 1
+  airJumpPrefab: {fileID: 3759858078342628726, guid: 092fc659a442cb9488d0b852a55ded8c,
+    type: 3}
   x: 0
   y: 0
   xRaw: 0
