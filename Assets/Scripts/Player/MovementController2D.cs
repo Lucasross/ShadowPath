@@ -61,7 +61,7 @@ public class MovementController2D : MonoBehaviour
 			if(!coll.onGround)
 			{
 				airJumpCurrent += postDashJumpCurrent;
-				postDashJumpCurrent--;
+				postDashJumpCurrent -= postDashJumpQty;
 			}
 		});
 	}
@@ -104,6 +104,9 @@ public class MovementController2D : MonoBehaviour
 
 		Run();
 
+		if (jump && coll.onWall && enabledWallJump)
+			WallJump();
+
 		if (jump)
 		{
 			if (coll.onGround)
@@ -115,9 +118,6 @@ public class MovementController2D : MonoBehaviour
 
 		if (wallSlide && enabledWallSlide)
 			WallSlide();
-
-		if (jump && coll.onWall && enabledWallJump)
-			WallJump();
 
 		if (special && dashCooldown.done && enabledDash)
 			Dash();

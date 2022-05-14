@@ -18,10 +18,10 @@ public class Hitbox2D
 {
 	public Vector2 offset;
 	public Vector2 size;
-	public Vector2 position => (Vector2)owner.transform.position + relativeOffset;
+	public Vector2 position => (owner == null ? Vector2.zero : (Vector2)owner.transform.position) + sidedOffset;
 
 	private Entity2D owner;
-	private Vector2 relativeOffset => new Vector2(offset.x * owner.side, offset.y);
+	private Vector2 sidedOffset => new Vector2(offset.x * (owner == null ? 1 : owner.side), offset.y);
 
 	public Hitbox2D(Entity2D owner, Vector2 offset, Vector2 size)
 	{
