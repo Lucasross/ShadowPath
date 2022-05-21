@@ -84,6 +84,9 @@ public class EnemyNavigation : MonoBehaviour
 
 	private void ReachedTarget()
 	{
+		if (!reachedTarget)
+			rb.velocity = Vector2.up * rb.velocity;
+
 		reachedTarget = true;
 	}
 
