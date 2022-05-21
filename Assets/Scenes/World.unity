@@ -10619,7 +10619,7 @@ GameObject:
   - component: {fileID: 479240829}
   - component: {fileID: 479240828}
   - component: {fileID: 479240830}
-  - component: {fileID: 479240826}
+  - component: {fileID: 479240827}
   m_Layer: 0
   m_Name: Monster_OneEyedBat
   m_TagString: Untagged
@@ -10641,22 +10641,20 @@ Transform:
   m_Father: {fileID: 523559159}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &479240826
-CircleCollider2D:
+--- !u!114 &479240827
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 479240824}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.096671395, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.10098772
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a623ea2bdfe9ffa488ebc1786d2a8e37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aiPath: {fileID: 523559160}
+  sprite: {fileID: 479240829}
 --- !u!95 &479240828
 Animator:
   serializedVersion: 3
@@ -10740,9 +10738,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.10798395, y: 0}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.10201605
+  m_Radius: 0.10384256
 --- !u!1 &501274212
 GameObject:
   m_ObjectHideFlags: 0
@@ -11043,9 +11041,9 @@ MonoBehaviour:
   targetCompatibility: {fileID: 0}
   maxAcceleration: -2.5
   rotationSpeed: 360
-  slowdownDistance: 0.6
-  pickNextWaypointDist: 1.52
-  endReachedDistance: 1.29
+  slowdownDistance: 1.25
+  pickNextWaypointDist: 1.5
+  endReachedDistance: 1
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
