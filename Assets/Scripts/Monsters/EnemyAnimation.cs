@@ -9,7 +9,7 @@ public class EnemyAnimation : MonoBehaviour
 	public Rigidbody2D rb;
 	public SpriteRenderer sprite;
 	public Animator anim;
-	public EnemyNavigation navigation;
+	public EnemyNavigationGround navigation;
 
 	public Transform target => navigation.target.transform;
 

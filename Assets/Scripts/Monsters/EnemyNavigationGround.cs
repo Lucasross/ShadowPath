@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-public class EnemyNavigation : MonoBehaviour
+public class EnemyNavigationGround : MonoBehaviour
 {
 	public LayerMask groundLayer;
 
