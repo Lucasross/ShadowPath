@@ -108,7 +108,7 @@ public class MovementController2D : MonoBehaviour
 
 		Run();
 
-		if (jump && coll.onWall && enabledWallJump)
+		if (jump && coll.onWall && enabledWallJump && !coll.onGround)
 			WallJump();
 
 		if (jump)
