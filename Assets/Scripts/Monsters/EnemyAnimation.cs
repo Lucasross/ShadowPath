@@ -9,21 +9,35 @@ public class EnemyAnimation : MonoBehaviour
 	public Rigidbody2D rb;
 	public SpriteRenderer sprite;
 	public Animator anim;
+	public EnemyNavigation navigation;
+
+	public Transform target => navigation.target.transform;
 
 	void Update()
 	{
 		UpdateAnimation();
 
-		if (rb.velocity.x >= 0.01f)
+		if(rb.velocity.x == 0)
+		{
+			if (rb.position.x < target.position.x)
+				FlipRight();
+			else if (rb.position.x > target.position.x)
+				FlipLeft();
+
+			return;
+		}
+
+
+		if (rb.velocity.x >= 0.05f)
 			FlipRight();
 
-		else if(rb.velocity.x <= 0.01f)
+		else if (rb.velocity.x <= -0.05f)
 			FlipLeft();
 	}
 
 	private void UpdateAnimation()
 	{
-		anim.SetFloat("velocity", Mathf.Abs(rb.velocity.x));
+		anim.SetBool("isRunning", navigation.IsRunning);
 	}
 
 	private void FlipLeft() => Flip(true);
@@ -33,5 +47,4 @@ public class EnemyAnimation : MonoBehaviour
 	{
 		sprite.flipX = isFlip;
 	}
-
 }

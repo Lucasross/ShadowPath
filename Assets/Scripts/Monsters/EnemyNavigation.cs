@@ -1,80 +1,69 @@
 ﻿using Pathfinding;
+using System;
 using UnityEngine;
 
 public class EnemyNavigation : MonoBehaviour
 {
 	public LayerMask groundLayer;
 
+	public bool isHunting;
+
 	public Transform target;
 	public float speed = 5f;
-	public float nextWaypointDistance = 3f;
+	public float jumpForce = 10f;
 	public float reachedTargetDistance = 3f;
+	public bool reachedTarget = false;
 	public float jumpDistance = 1.5f;
 
-	private Path path;
-	private int currentWaypoint;
-	private bool reachedEndOfWaypoint = false;
-	private bool reachedTarget = false;
+	public bool IsRunning => Mathf.Abs(rb.velocity.x) > 0 || (!reachedTarget && !targetOnYAxis);
 
-	private Seeker seeker;
 	private Rigidbody2D rb;
+	private EnemyCollision coll;
 
 	private Vector2 direction;
 	private Vector2 toward => new Vector2(direction.x + jumpDistance * direction.x, 0);
 
+	private bool targetOnYAxis;
+
 	void Start()
 	{
-		seeker = GetComponent<Seeker>();
 		rb = GetComponent<Rigidbody2D>();
+		coll = GetComponent<EnemyCollision>();
 
-		InvokeRepeating("UpdatePath", 0f, 2f);
-	}
-
-	void UpdatePath()
-	{
-		Debug.Log("UpdatePath");
-
-		if(!reachedTarget)
-			seeker.StartPath(rb.position, target.position, OnPathComplete);
+		isHunting = true;
 	}
 
 	void FixedUpdate()
 	{
-		if (path == null)
-			return;
-
-		UpdateReachedEndOfWaypoint();
-
 		CheckReachedTarget();
 
 		if (reachedTarget)
+			return;
+
+		CheckYAxis();
+
+		if (targetOnYAxis)
 			return;
 
 		GetDirection();
 
 		Run();
 
-		if (NeedToJump())
+		if (NeedToJump() && CanJump())
 			Jump();
 
-		UpdateWaypoint();
 	}
 
-	private void UpdateWaypoint()
+	private void CheckYAxis()
 	{
-		float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
+		if (BarelyEqual(rb.position.x, target.position.x))
+		{
+			rb.velocity = new Vector2(0, rb.velocity.y);
+			targetOnYAxis = true;
+			return;
+		}
 
-		if (distance < nextWaypointDistance && currentWaypoint + 1 < path.vectorPath.Count)
-			currentWaypoint++;
-	}
-
-	private void UpdateReachedEndOfWaypoint()
-	{
-		if (currentWaypoint >= path.vectorPath.Count)
-			reachedEndOfWaypoint = true;
-
-		else
-			reachedEndOfWaypoint = false;
+		targetOnYAxis = false;
 	}
 
 	private void CheckReachedTarget()
@@ -105,27 +94,13 @@ public class EnemyNavigation : MonoBehaviour
 
 	private void GetDirection()
 	{
-		direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position);
+		direction = (Vector2)target.position - rb.position;
 
 		if (direction.x > 0.01f)
 			direction.x = 1;
 
 		else if (direction.x < 0.01f)
 			direction.x = -1;
-	}
-
-	private void OnPathComplete(Path p)
-	{
-		if (p == null || p.error)
-			return;
-
-		path = p;
-		currentWaypoint = 0;
-	}
-
-	private void ReachedEndOfPath()
-	{
-		reachedEndOfWaypoint = true;
 	}
 
 	private bool NeedToJump()
@@ -135,9 +110,14 @@ public class EnemyNavigation : MonoBehaviour
 		return hit.collider != null;
 	}
 
+	private bool CanJump()
+	{
+		return coll.onGround;
+	}
+
 	private void Jump()
 	{
-		rb.velocity = new Vector2(rb.velocity.x, 5);
+		rb.velocity = new Vector2(rb.velocity.x, jumpForce);
 	}
 
 	private void OnDrawGizmos()
@@ -146,10 +126,6 @@ public class EnemyNavigation : MonoBehaviour
 			return;
 
 		Gizmos.DrawLine(rb.position, rb.position + direction);
-
-		Gizmos.color = Color.red;
-
-		//Gizmos.DrawWireSphere(path.vectorPath[currentWaypoint], 0.2f);
 
 		Gizmos.color = Color.magenta * 0.8f;
 
@@ -161,12 +137,16 @@ public class EnemyNavigation : MonoBehaviour
 		if (rb == null)
 			rb = GetComponent<Rigidbody2D>();
 
-		Gizmos.color = Color.red;
-
-		Gizmos.DrawWireSphere(rb.position, nextWaypointDistance);
-
 		Gizmos.color = Color.green;
 
 		Gizmos.DrawWireSphere(rb.position, reachedTargetDistance);
+	}
+
+	public static bool BarelyEqual(float a, float b, float threshold = 0.5f)
+	{
+		a = Mathf.Abs(a);
+		b = Mathf.Abs(b);
+		float diff = Mathf.Abs(a - b);
+		return diff < threshold;
 	}
 }
