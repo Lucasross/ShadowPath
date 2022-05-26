@@ -5,4 +5,6 @@ using UnityEngine;
 public class Entity2D : MonoBehaviour
 {
 	[HideInInspector] public int side = 1;
+
+	protected virtual void Awake() { }
 }

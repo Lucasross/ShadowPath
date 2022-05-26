@@ -338,10 +338,10 @@ GameObject:
   - component: {fileID: 4379027977938798040}
   - component: {fileID: 4379027977938798038}
   - component: {fileID: 4379027977938798039}
+  - component: {fileID: 4379027977938798042}
   - component: {fileID: 4379027977938798037}
   - component: {fileID: 4379027977938798035}
   - component: {fileID: 4379027977938798032}
-  - component: {fileID: 4379027977938798042}
   - component: {fileID: 4379027977938798036}
   m_Layer: 0
   m_Name: Player
@@ -460,6 +460,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fallMultiplier: 1.79
   lowJumpMultiplier: 1.9
+--- !u!114 &4379027977938798042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4379027977938798033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 369ef63e9e349b44587724bfb3b82696, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  side: 1
+  attacksData:
+  - hitbox:
+      offset: {x: 1.1, y: 0.21}
+      size: {x: 2.44, y: 2.06}
+    damageMultiplier: 1
+    showGizmosHitbox: 1
+  - hitbox:
+      offset: {x: 0.49, y: 0.42}
+      size: {x: 3.18, y: 2.03}
+    damageMultiplier: 0
+    showGizmosHitbox: 1
 --- !u!212 &4379027977938798037
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -551,20 +575,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4379027977938798042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4379027977938798033}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 369ef63e9e349b44587724bfb3b82696, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  side: 1
-  attacksData: []
 --- !u!70 &4379027977938798036
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

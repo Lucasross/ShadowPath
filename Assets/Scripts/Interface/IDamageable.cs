@@ -5,4 +5,6 @@ using UnityEngine;
 public interface IDamageable
 {
 	Entity2D Entity { get; }
+
+	void Receive(float damage);
 }
