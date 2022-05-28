@@ -9,7 +9,7 @@ public class Entity2D : MonoBehaviour
 	public Vector2 position => (Vector2)transform.position;
 
 	[SerializeField] protected Vector2 damagePopupOffset;
-	protected Vector2 damagePopupPosition => position + damagePopupOffset;
+	protected Vector2 damagePopupPosition => position + new Vector2(damagePopupOffset.x * side, damagePopupOffset.y);
 
 	protected virtual void Awake() { }
 
