@@ -7,11 +7,9 @@ public class Monster : Entity2D, IDamageable
 	public Entity2D Entity => this;
 	public Animator anim;
 
-	public DamagePopup damagePopupPrefab;
-
 	public void Receive(float damage)
 	{
 		anim.SetTrigger("hitted");
-		Instantiate(damagePopupPrefab).Setup(Mathf.RoundToInt(damage), transform.position);
+		Instantiate(EntityManager.Instance.damagePopup).Setup(Mathf.RoundToInt(damage), damagePopupPosition);
 	}
 }

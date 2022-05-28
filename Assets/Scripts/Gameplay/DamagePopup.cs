@@ -10,13 +10,13 @@ public class DamagePopup : MonoBehaviour
 
 	public DamagePopup Setup(int damage, Vector3 position)
 	{
-		position.y += 0.5f;
 		transform.position = position;
+		transform.localScale = Vector3.one * 1.5f;
 
 		label.text = damage.ToString();
 
 		DOTween.Sequence()
-			.AppendInterval(0.5f)
+			.Append(transform.DOScale(Vector3.one, 0.2f))
 			.AppendCallback(() => { 
 				label.DOFade(0, 1.5f); 
 				transform.DOMoveY(transform.position.y + 1.3f, 1.5f).OnComplete(() => Destroy(gameObject)); 

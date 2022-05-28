@@ -36,8 +36,10 @@ public abstract class Character : Entity2D, IDamageable
 		}
 	}
 
-	void OnDrawGizmosSelected()
+	protected override void OnDrawGizmosSelected()
 	{
+		base.OnDrawGizmosSelected();
+
 		foreach(AttackData data in attacksData)
 		{
 			if(data.showGizmosHitbox)

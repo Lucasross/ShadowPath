@@ -473,6 +473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   side: 1
+  damagePopupOffset: {x: 0, y: 0.81}
   attacksData:
   - hitbox:
       offset: {x: 1.1, y: 0.21}
