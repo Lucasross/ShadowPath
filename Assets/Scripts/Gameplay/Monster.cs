@@ -12,6 +12,8 @@ public class Monster : Entity2D, IDamageable
 	public Entity2D Entity => this;
 	public Bar healthBar = new Bar();
 
+	private bool dead;
+
 	protected override void Awake()
 	{
 		healthBar.max = data.health;
@@ -24,11 +26,21 @@ public class Monster : Entity2D, IDamageable
 
 	private void OnDie()
 	{
+		anim.ResetTrigger("hitted");
+		anim.SetTrigger("die");
+		dead = true;
+	}
+
+	private void Anim_EndDie()
+	{
 		Destroy(gameObject.transform.parent.gameObject);
 	}
 
 	public void Receive(float damage)
 	{
+		if (dead)
+			return;
+
 		anim.SetTrigger("hitted");
 		Instantiate(EntityManager.Instance.damagePopup).Setup(Mathf.RoundToInt(damage), damagePopupPosition);
 		healthBar.Decrease(damage);

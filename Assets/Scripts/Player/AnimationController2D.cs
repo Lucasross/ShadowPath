@@ -10,6 +10,7 @@ public class AnimationController2D : MonoBehaviour
 	private AttackController2D attack;
 	private Rigidbody2D rb;
 	private CharacterCollision2D coll;
+	private Entity2D entity;
 	[HideInInspector]
 	public SpriteRenderer sr;
 
@@ -21,6 +22,7 @@ public class AnimationController2D : MonoBehaviour
 		attack = GetComponent<AttackController2D>();
 		rb = GetComponent<Rigidbody2D>();
 		sr = GetComponent<SpriteRenderer>();
+		entity = GetComponent<Entity2D>();
 	}
 
 	void Update()
@@ -55,6 +57,7 @@ public class AnimationController2D : MonoBehaviour
 
 	public void Flip(bool flipX)
 	{
+		entity.side = flipX ? -1 : 1;
 		sr.flipX = flipX;
 	}
 }
